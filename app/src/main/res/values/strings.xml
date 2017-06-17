@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Recetea.me</string>
+    <string name="one">Valor1</string>
+    <string name="action">Action</string>
+    <string name="title">Esto es una prueba que</string>
+    <string name="description">puede funcionar sin ninguna duda</string>
+    <string name="details">Detalles</string>
+    <string name="info">informacion</string>
+    <string name="dialog_message">Cargando...</string>
+    <string name="imgDescripcion">recipe_detail</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="ingredients">Ingredientes</string>
+    <string name="steps">Pasos a seguir</string>
+    <string name="shoppingList">Añadir a la cesta de la compra</string>
+    <string name="four">4</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="shoppingListTitle">Tu lista de la compra</string>
+    <string name="shoppingListDeletion">¡Lista borrada con exito!</string>
+    <string name="ShoppingListHeader">Tu cesta de la compra</string>
+    <string name="FavListHeader">Tus recetas favoritas</string>
+    <string name="HomeHeader">Inicio</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_products">Search products..</string>
+    <string name="hint_name">Nombre de usuario</string>
+    <string name="hint_email">Introduce tu email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_register">Registrar</string>
+    <string name="btn_link_to_login">Login</string>
+    <string name="btn_login">Log In</string>
+    <string name="btn_link_to_register">Registro</string>
+    <string name="tab_title">Titulo customizado</string>
+    <string name="recipe_name">Nombre de la receta</string>
+    <string name="recipe_description">Descripcion de la receta</string>
+    <string name="title_activity_create_recipe">Crea tu propia receta</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="recipe_duracion">Duración aproximada</string>
+    <string name="recipe_portions">Número de porciones</string>
+    <string name="error_field_too_long">Has excecido la extensión maxima de caracteres</string>
+    <string name="string_choose_file">¡Añade una foto de tu receta!</string>
+    <string name="recipe_image">Recipe image</string>
+    <string name="recipe_tags">¡Añade una etiqueta!</string>
+    <string name="recipe_ingredients">¡Añade un ingrediente!</string>
+    <string name="recipe_add_tag">+ Etiqueta</string>
+    <string name="recipe_add_ingredient">+ Ingrediente</string>
+    <string name="recipe_steps">Añade un paso a tu receta</string>
+    <string name="recipe_add_step">+ Paso</string>
+</resources>
