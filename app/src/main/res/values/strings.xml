@@ -60,4 +60,5 @@
     <string name="recipe_add_ingredient">+ Ingrediente</string>
     <string name="recipe_steps">Añade un paso a tu receta</string>
     <string name="recipe_add_step">+ Paso</string>
+    <string name="search_hint">Busca tus recetas</string>
 </resources>

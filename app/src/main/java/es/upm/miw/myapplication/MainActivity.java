@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             R.mipmap.ic_search_white,
             R.mipmap.ic_shopping_cart_white,
             R.mipmap.ic_tab_favourite,
+            R.mipmap.ic_shuffle_white,
             R.mipmap.ic_account_circle
     };
 
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
         tabLayout.getTabAt(3).setIcon(tabIcons[3]);
-        tabLayout.getTabAt(5).setIcon(tabIcons[4]);
+        tabLayout.getTabAt(4).setIcon(tabIcons[4]);
+        tabLayout.getTabAt(5).setIcon(tabIcons[5]);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new TwoFragment(), "Buscar");
         adapter.addFragment(new ThreeFragment(), "Cesta");
         adapter.addFragment(new FourFragment(), "Favoritos");
-        adapter.addFragment(new FiveFragment(), "ReceteaMe");
+        adapter.addFragment(new FiveFragment(), "Recetea");
         adapter.addFragment(new SixFragment(), "Otro");
         viewPager.setAdapter(adapter);
     }
@@ -95,12 +97,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            if(position==4){
-                return mFragmentTitleList.get(position);
-            }
+        public CharSequence getPageTitle(int position)
+        {
             return null;
-
         }
     }
 }

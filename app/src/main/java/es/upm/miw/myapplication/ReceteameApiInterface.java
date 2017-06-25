@@ -49,4 +49,8 @@ public interface ReceteameApiInterface {
                                @Field("recipe_form[image]") String image);
     @GET("tags")
     Call<List<RecipeTag>> getTags();
+
+    @GET("recipes")
+    Call<Recipes> getRecipesByName(@Query("recipe_filter[name]") String name,
+                                   @Query("page") int pageIndex);
 }

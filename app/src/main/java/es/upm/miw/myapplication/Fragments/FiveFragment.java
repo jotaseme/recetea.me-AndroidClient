@@ -36,7 +36,7 @@ public class FiveFragment extends Fragment{
     RecyclerView MyRecyclerView;
     public static final String LOG_TAG = "TFM2017";
     private static final String FAVS = "/data/data/es.upm.miw.myapplication/files/favList.txt";
-    private final static String URL_BASE = "http://receteame.cecofersa.com/";
+    private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
     public static Retrofit retrofit;
     List<Recipe> randomRecipesList = new ArrayList<>();
 
