@@ -37,8 +37,6 @@ public class ReciclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
         holder.titleTextView.setText(list.get(position).getName());
-
-
         String url = IMG_URL_BASE + list.get(position).getImage();
         Picasso.with(context.getApplicationContext())
                 .load(url)

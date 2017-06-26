@@ -34,7 +34,7 @@ public class OneFragment extends Fragment {
 
     public static ReceteameApiInterface receteameApiInterface;
     public static Retrofit retrofit;
-    RecyclerView MyRecyclerView;
+    private RecyclerView MyRecyclerView;
     private List<Recipe> recipes = new ArrayList<>();
 
     private int count = 1;

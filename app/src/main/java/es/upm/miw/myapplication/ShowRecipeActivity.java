@@ -20,10 +20,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +30,6 @@ import es.upm.miw.myapplication.Models.RecipeIngredient;
 import es.upm.miw.myapplication.Models.RecipeStep;
 import es.upm.miw.myapplication.Models.RecipeTag;
 import es.upm.miw.myapplication.Models.ShoppingList;
-import es.upm.miw.myapplication.Utils.AppendingObjectOutputStream;
 import me.gujun.android.taggroup.TagGroup;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +40,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ShowRecipeActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = "TFM2017";
-    private static final String FICHERO = "data/data/es.upm.miw.myapplication/files/shoppingList.txt";
     private TextView tvName, tvDescription;
     private ImageView ivRecipeImage;
     private Recipe recipe;
@@ -61,8 +55,9 @@ public class ShowRecipeActivity extends AppCompatActivity {
     private List<RecipeIngredient> ingredients = new ArrayList<>();
     private List<RecipeStep> steps = new ArrayList<>();
     public static Retrofit retrofit;
-    private final static String URL_BASE = "http://receteame.cecofersa.com/";
-    private final static String IMG_URL_BASE = "http://receteame.cecofersa.com/uploads/images/";
+
+    private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
+    private final static String IMG_URL_BASE = "http://10.0.2.2:8000/uploads/images/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +98,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
                }
                if(counter > 0){
                    ShoppingList shoppingList = new ShoppingList(recipe.getIdRecipe(),recipe.getName(),shoppingListIngredients);
-                   saveRecipeIngredients(shoppingList);
+                   shoppingList.saveRecipeIngredients();
                    Toast.makeText(getApplicationContext(), "¡Ingredientes añadidos a tu carrito de la compra!", Toast.LENGTH_SHORT).show();
                }
            }
@@ -204,32 +199,4 @@ public class ShowRecipeActivity extends AppCompatActivity {
         listView.setLayoutParams(par);
         listView.requestLayout();
     }
-
-
-    public void saveRecipeIngredients(ShoppingList shoppingList){
-        try
-        {
-            File file;
-
-            file = new File(FICHERO);
-            FileOutputStream fos = new FileOutputStream(FICHERO, true);
-
-            if (file.length() == 0) {
-                ObjectOutputStream out = new ObjectOutputStream(fos);
-                out.writeObject(shoppingList);
-                out.close();
-            } else {
-                ObjectOutputStream out = new AppendingObjectOutputStream(fos);
-                out.writeObject(shoppingList);
-                out.close();
-            }
-
-        }catch(IOException i)
-        {
-            i.printStackTrace();
-        }
-    }
-
-
-
 }
