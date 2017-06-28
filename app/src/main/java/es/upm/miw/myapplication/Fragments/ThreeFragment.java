@@ -99,9 +99,6 @@ public class ThreeFragment extends Fragment{
     }
 
     public ArrayList<ShoppingList> loadSerializedObject() {
-        //File path = getActivity().getApplicationContext().getFilesDir();
-        //Log.i(LOG_TAG, path +"");
-
         File yourFile = new File(FICHERO);
         try {
             yourFile.createNewFile();
@@ -143,9 +140,6 @@ public class ThreeFragment extends Fragment{
         ft.detach(this).attach(this).commit();
         shoppingIngredients.clear();
         adapter.notifyDataSetChanged();
-
-
-
     }
 
 }

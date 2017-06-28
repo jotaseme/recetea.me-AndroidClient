@@ -1,6 +1,7 @@
 package es.upm.miw.myapplication;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,10 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,7 @@ import es.upm.miw.myapplication.Models.RecipeIngredient;
 import es.upm.miw.myapplication.Models.RecipeStep;
 import es.upm.miw.myapplication.Models.RecipeTag;
 import es.upm.miw.myapplication.Models.ShoppingList;
+import es.upm.miw.myapplication.Utils.AppendingObjectOutputStream;
 import me.gujun.android.taggroup.TagGroup;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ShowRecipeActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = "TFM2017";
+    private static final String FICHERO = "data/data/es.upm.miw.myapplication/files/shoppingList.txt";
     private TextView tvName, tvDescription;
     private ImageView ivRecipeImage;
     private Recipe recipe;
@@ -55,7 +62,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
     private List<RecipeIngredient> ingredients = new ArrayList<>();
     private List<RecipeStep> steps = new ArrayList<>();
     public static Retrofit retrofit;
-
+    ProgressDialog pd;
     private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
     private final static String IMG_URL_BASE = "http://10.0.2.2:8000/uploads/images/";
 
@@ -81,6 +88,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
 
         int id_recipe = getIntent().getIntExtra(MainActivity.CLAVE,0);
         recipeDetail(id_recipe);
+        pd=ProgressDialog.show(ShowRecipeActivity.this,"","Please Wait",false);
         mTagGroup = (TagGroup) findViewById(R.id.tag_group);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +106,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
                }
                if(counter > 0){
                    ShoppingList shoppingList = new ShoppingList(recipe.getIdRecipe(),recipe.getName(),shoppingListIngredients);
-                   shoppingList.saveRecipeIngredients();
+                   saveRecipeIngredients(shoppingList);
                    Toast.makeText(getApplicationContext(), "¡Ingredientes añadidos a tu carrito de la compra!", Toast.LENGTH_SHORT).show();
                }
            }
@@ -127,8 +135,8 @@ public class ShowRecipeActivity extends AppCompatActivity {
         call.enqueue(new Callback<Recipe>() {
             @Override
             public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                pd.dismiss();
                 recipe = response.body();
-                Log.i(LOG_TAG, "LLAMADA SERVICIO = " + recipe.toString());
                 if (recipe.getImage() != null) {
                     String url = IMG_URL_BASE + recipe.getImage();
                     Picasso.with(getBaseContext())
@@ -199,4 +207,32 @@ public class ShowRecipeActivity extends AppCompatActivity {
         listView.setLayoutParams(par);
         listView.requestLayout();
     }
+
+
+    public void saveRecipeIngredients(ShoppingList shoppingList){
+        try
+        {
+            File file;
+
+            file = new File(FICHERO);
+            FileOutputStream fos = new FileOutputStream(FICHERO, true);
+
+            if (file.length() == 0) {
+                ObjectOutputStream out = new ObjectOutputStream(fos);
+                out.writeObject(shoppingList);
+                out.close();
+            } else {
+                ObjectOutputStream out = new AppendingObjectOutputStream(fos);
+                out.writeObject(shoppingList);
+                out.close();
+            }
+
+        }catch(IOException i)
+        {
+            i.printStackTrace();
+        }
+    }
+
+
+
 }

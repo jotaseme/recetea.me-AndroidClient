@@ -12,22 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 import es.upm.miw.myapplication.CreateRecipeActivity;
-import es.upm.miw.myapplication.Utils.AppendingObjectOutputStream;
 import es.upm.miw.myapplication.Models.UserToken;
 import es.upm.miw.myapplication.R;
 import es.upm.miw.myapplication.ReceteameApiInterface;
 import es.upm.miw.myapplication.RecyclerItemClickListener;
+import es.upm.miw.myapplication.RegisterActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,12 +36,6 @@ public class SixFragment extends Fragment{
 
     public static ReceteameApiInterface receteameApiInterface;
     public static Retrofit retrofit;
-
-    private Button btnRegister;
-    private Button btnLinkToLogin;
-    private EditText inputFullName;
-    private EditText inputEmail;
-    private EditText inputPassword;
     private ProgressDialog pDialog;
 
     private Button btnLogin;
@@ -56,10 +43,10 @@ public class SixFragment extends Fragment{
     private ImageView btnLogout;
     private EditText inputEmailLogin;
     private EditText inputPasswordLogin;
-    //private SessionManager session;
+    private TextView usernameTextView;
     Boolean isLogged = false;
     View rootView;
-    View secondView;
+    ProgressDialog pd;
     public SixFragment() {
         // Required empty public constructor
     }
@@ -75,15 +62,13 @@ public class SixFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(!UserToken.isLogged()){
+        if(UserToken.getUserToken()==null){
             final View rootView =  inflater.inflate(R.layout.fragment_seven, container, false);
 
             inputEmailLogin = (EditText) rootView.findViewById(R.id.email);
             inputPasswordLogin = (EditText) rootView.findViewById(R.id.password);
             btnLogin = (Button) rootView.findViewById(R.id.btnLogin);
             btnLinkToRegister = (Button) rootView.findViewById(R.id.btnLinkToRegisterScreen);
-
-            // Progress dialog
             pDialog = new ProgressDialog(getActivity().getApplicationContext());
             pDialog.setCancelable(false);
 
@@ -96,6 +81,7 @@ public class SixFragment extends Fragment{
 
                     // Check for empty data in the form
                     if (!email.isEmpty() && !password.isEmpty()) {
+                        pd=ProgressDialog.show(getActivity(),"","Please Wait",false);
                         loginUser(email,password);
                     } else {
                         // Prompt user to enter credentials
@@ -110,16 +96,26 @@ public class SixFragment extends Fragment{
             btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View view) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Registro", Toast.LENGTH_LONG)
-                            .show();
+                    Intent intent = new Intent(getActivity().getBaseContext(), RegisterActivity.class);
+                    intent.putExtra(CLAVE, "HOLA AMIGO");
+                    startActivity(intent);
 
                 }
             });
             return rootView;
         }else{
+            String userToken = UserToken.getUserToken();
+            String username = "";
+            try {
+               username = UserToken.decoded(userToken);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             rootView =  inflater.inflate(R.layout.profile_layout, container, false);
+            usernameTextView = (TextView) rootView.findViewById(R.id.user_profile_name);
+            usernameTextView.setText(username);
             btnLogout = (ImageView) rootView.findViewById(R.id.logout);
             FloatingActionButton addRecipe = (FloatingActionButton)  rootView.findViewById(R.id.fab);
             addRecipe.setOnClickListener(new View.OnClickListener() {
@@ -150,81 +146,8 @@ public class SixFragment extends Fragment{
                         }
 
                     });
-            /*
-            inputFullName = (EditText) rootView.findViewById(R.id.name);
-            inputEmail = (EditText) rootView.findViewById(R.id.email);
-            inputPassword = (EditText) rootView.findViewById(R.id.password);
-            btnRegister = (Button) rootView.findViewById(R.id.btnRegister);
-            btnLinkToLogin = (Button) rootView.findViewById(R.id.btnLinkToLoginScreen);
-
-            btnRegister.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    String name = inputFullName.getText().toString().trim();
-                    String email = inputEmail.getText().toString().trim();
-                    String password = inputPassword.getText().toString().trim();
-
-                    if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
-                        registerUser(name, email, password);
-                    } else {
-
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Please enter your details!", Toast.LENGTH_LONG)
-                                .show();
-                    }
-                }
-            });
-
-            btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                        UserToken.destroyToken();
-                }
-
-            });*/
             return rootView;
         }
-    }
-
-
-    private void registerUser(String user, String email, String password){
-        retrofit = new Retrofit.Builder()
-                .baseUrl(URL_BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        receteameApiInterface = retrofit.create(ReceteameApiInterface.class);
-
-        Call<Object> call = receteameApiInterface.registerUser(user, email, password);
-        call.enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                //progress.dismiss();
-                Object user = response.body();
-                Object code = response.code();
-                Log.i(LOG_TAG, code + " ER CODE");
-                //inputEmail.setError("El codigo de error " + code);
-                Log.i(LOG_TAG, user + " esto tengo");
-
-                try {
-                    JSONObject jObjError = new JSONObject(response.errorBody().string());
-                    Log.i(LOG_TAG, "MAS INFO: " + jObjError.getString("message"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-
-            }
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.e(LOG_TAG, t.toString());
-                Toast.makeText(
-                        getContext(),
-                        t.toString(),
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        });
     }
 
     private void loginUser(String email, String password){
@@ -238,16 +161,11 @@ public class SixFragment extends Fragment{
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                //progress.dismiss();
-                Log.i(LOG_TAG, response.code() + " CODE");
-                //inputEmail.setError("El codigo de error " + code);
-                Log.i(LOG_TAG, response.body()+"");
+                pd.dismiss();
                 if(response.code()==200){
                     Object token = response.body();
-                    token = token.toString().substring(token.toString().lastIndexOf("=") + 1);
-                    token = token.toString().substring(0,token.toString().length()-1);
                     UserToken userToken = new UserToken(token.toString());
-                    saveUserToken(userToken);
+                    userToken.saveUserToken();
                     (getActivity()).recreate();
                 }else{
                     Toast.makeText(getActivity().getApplicationContext(),
@@ -266,30 +184,4 @@ public class SixFragment extends Fragment{
             }
         });
     }
-
-    public void saveUserToken(UserToken userToken){
-        try
-        {
-            File file;
-
-            file = new File(USER_TOKEN);
-            file.delete();
-            FileOutputStream fos = new FileOutputStream(USER_TOKEN, true);
-
-            if (file.length() == 0) {
-                ObjectOutputStream out = new ObjectOutputStream(fos);
-                out.writeObject(userToken);
-                out.close();
-            } else {
-                ObjectOutputStream out = new AppendingObjectOutputStream(fos);
-                out.writeObject(userToken);
-                out.close();
-            }
-
-        }catch(IOException i)
-        {
-            i.printStackTrace();
-        }
-    }
-
 }

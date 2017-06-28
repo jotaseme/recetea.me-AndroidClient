@@ -2,12 +2,15 @@ package es.upm.miw.myapplication.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +30,7 @@ public class FourFragment extends Fragment{
     public static final String LOG_TAG = "TFM2017";
     public static final String CLAVE = LOG_TAG;
     private ArrayList<RecipeSimplify> recipesSimplify = new ArrayList<>();
+    ReciclerSimplifyAdapter adapter;
     public FourFragment() {
         // Required empty public constructor
     }
@@ -45,7 +49,7 @@ public class FourFragment extends Fragment{
 
         MyRecyclerView = (RecyclerView) rootView.findViewById(R.id.simpleCardView);
         MyRecyclerView.setHasFixedSize(true);
-        ReciclerSimplifyAdapter adapter = new ReciclerSimplifyAdapter(recipesSimplify);
+        adapter = new ReciclerSimplifyAdapter(recipesSimplify);
         MyRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         MyRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -59,12 +63,21 @@ public class FourFragment extends Fragment{
                         startActivity(intent);
                     }
                 }));
+        FloatingActionButton floatingActionButton = (FloatingActionButton)  rootView.findViewById(R.id.trash);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteFavRecipesList();
+                //Toast.makeText(getActivity(), R.string.action, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return rootView;
     }
 
     public ArrayList<RecipeSimplify> loadSerializedObject() {
         File yourFile = new File(FAVS);
+
         try {
             yourFile.createNewFile();
         } catch (IOException e) {
@@ -91,6 +104,20 @@ public class FourFragment extends Fragment{
             e.printStackTrace();
         }
         return recipesSimplify;
+    }
+
+    public void deleteFavRecipesList() {
+        File file = new File(FAVS);
+        file.delete();
+        Toast.makeText(
+                getActivity().getApplicationContext(),
+                R.string.favRecipesListDeletion,
+                Toast.LENGTH_SHORT
+        ).show();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
+        recipesSimplify.clear();
+        adapter.notifyDataSetChanged();
     }
 
 }

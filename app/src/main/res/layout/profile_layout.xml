@@ -38,16 +38,6 @@
             android:elevation="4dp"
             android:paddingBottom="24dp">
 
-
-            <ImageView
-                android:id="@+id/add_friend"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_toLeftOf="@+id/logout"
-                android:src="@mipmap/ic_tab_favourite" />
-
             <ImageView
                 android:id="@+id/logout"
                 android:layout_width="30dp"
@@ -55,7 +45,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:src="@mipmap/ic_delete_white" />
+                android:src="@mipmap/ic_exit_to_app" />
 
             <TextView
                 android:id="@+id/user_profile_name"
@@ -63,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="76dp"
-                android:text="Viral Android"
                 android:textColor="#fff"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -75,11 +64,10 @@
                 android:layout_below="@+id/user_profile_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:text="Android free tutorials and example"
+                android:text="@string/profile_message"
                 android:textColor="#fff"
                 android:textSize="14sp" />
         </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="fill_parent"
