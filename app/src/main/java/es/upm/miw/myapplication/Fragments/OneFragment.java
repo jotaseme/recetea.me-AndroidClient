@@ -1,5 +1,6 @@
 package es.upm.miw.myapplication.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,7 +46,7 @@ public class OneFragment extends Fragment {
     private boolean loading = true;
     private int visibleThreshold = 5;
     int firstVisibleItem, visibleItemCount, totalItemCount;
-
+    ProgressDialog pd;
     public OneFragment() {
         // Required empty public constructor
     }
@@ -67,6 +68,7 @@ public class OneFragment extends Fragment {
         reciclerAdapter = new ReciclerAdapter(recipes);
         MyRecyclerView.setAdapter(reciclerAdapter);
         getRecipes(1);
+        pd=ProgressDialog.show(getActivity(),"","Please Wait",false);
 
         mLayoutManager = new GridLayoutManager(getActivity(), 1);
         MyRecyclerView.setLayoutManager(mLayoutManager);
@@ -100,6 +102,7 @@ public class OneFragment extends Fragment {
                         <= (firstVisibleItem + visibleThreshold)) {
                     count++;
                     getRecipes(count);
+                    pd=ProgressDialog.show(getActivity(),"","Please Wait",false);
                     loading = true;
                 }
             }
@@ -118,6 +121,7 @@ public class OneFragment extends Fragment {
         call.enqueue(new Callback<Recipes>() {
             @Override
             public void onResponse(Call<Recipes> call, Response<Recipes> response) {
+                pd.dismiss();
                 //progress.dismiss();
                 Recipes recipesResult = response.body();
                 Log.i(LOG_TAG, recipesResult+"");
@@ -136,5 +140,4 @@ public class OneFragment extends Fragment {
             }
         });
     }
-
 }
