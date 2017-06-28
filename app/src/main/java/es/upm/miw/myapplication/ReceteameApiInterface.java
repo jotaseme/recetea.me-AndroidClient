@@ -22,9 +22,8 @@ public interface ReceteameApiInterface {
     @GET("recipes/{id_recipe}")
     Call<Recipe> getRecipe(@Path("id_recipe") int id_recipe);
 
-    @GET("recipes/{id_recipe}")
-    Call<List<Recipe>> getRandomRecipe(@Path("id_recipe") String id_recipe,
-                                      @Query("random") String random);
+    @GET("recipes/random")
+    Call<List<Recipe>> getRandomRecipe();
 
     @FormUrlEncoded
     @POST("users")
