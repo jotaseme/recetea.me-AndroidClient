@@ -125,15 +125,28 @@
                         android:id="@+id/recipeStepsCardView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/addComment"
-                        android:layout_width="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_comment"
-                        android:visibility="invisible"
-                        android:textColor="@color/textColorPrimary"
-                        app:backgroundTint="@color/colorPrimaryDark" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/addComment"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_comment"
+                            android:visibility="invisible"
+                            android:textColor="@color/textColorPrimary"
+                            app:backgroundTint="@color/colorPrimaryDark" />
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/viewComments"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content"
+                            android:text="Ver Comentarios"
+                            android:textColor="@color/textColorPrimary"
+                            app:backgroundTint="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </FrameLayout>

@@ -3,6 +3,7 @@ package es.upm.miw.myapplication;
 import java.util.List;
 
 import es.upm.miw.myapplication.Models.Recipe;
+import es.upm.miw.myapplication.Models.RecipeComment;
 import es.upm.miw.myapplication.Models.RecipeTag;
 import es.upm.miw.myapplication.Models.Recipes;
 import retrofit2.Call;
@@ -62,4 +63,8 @@ public interface ReceteameApiInterface {
                                @Path("id_recipe") int id_recipe,
                                @Field("form_comment[title]") String title,
                                @Field("form_comment[description]") String description);
+
+    @GET("recipes/{id_recipe}/comments")
+    Call<List<RecipeComment>> getRecipeComments(@Header("Authorization") String authorization,
+                                                      @Path("id_recipe") int id_recipe);
 }

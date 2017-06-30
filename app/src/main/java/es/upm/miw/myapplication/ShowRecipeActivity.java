@@ -60,6 +60,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
     private ListView ingredientsView;
     private Button button;
     private Button addCommentButton;
+    private Button showCommentsButton;
     private IngredientsAdapter adapter;
     //private StepsAdapter steps_adapter;
     private List<RecipeTag> tags = new ArrayList<>();
@@ -84,6 +85,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
         button = (Button) findViewById(R.id.shoppingList);
         addCommentButton = (Button) findViewById(R.id.addComment);
+        showCommentsButton = (Button) findViewById(R.id.viewComments);
         if(UserToken.getUserToken()!=null){
             addCommentButton.setVisibility(View.VISIBLE);
         }
@@ -128,6 +130,15 @@ public class ShowRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                intent.putExtra("id_recipe", recipe.getIdRecipe());
+                intent.putExtra("recipe_name", recipe.getName());
+                startActivity(intent);
+            }
+        });
+        showCommentsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ShowCommentsActivity.class);
                 intent.putExtra("id_recipe", recipe.getIdRecipe());
                 intent.putExtra("recipe_name", recipe.getName());
                 startActivity(intent);

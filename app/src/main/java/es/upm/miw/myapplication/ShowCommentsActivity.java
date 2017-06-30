@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
+import es.upm.miw.myapplication.Adapters.ReciclerRecipeCommentsAdapter;
+import es.upm.miw.myapplication.Models.RecipeComment;
 import es.upm.miw.myapplication.Models.UserToken;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,68 +24,42 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class CommentActivity extends AppCompatActivity {
+public class ShowCommentsActivity extends AppCompatActivity {
 
     private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
     public static final String LOG_TAG = "TFM2017";
 
-    TextView recipeName;
     int id_recipe;
-    private EditText commentTitle;
-    private EditText commentDescription;
+    String recipen_name;
     public static Retrofit retrofit;
     public static ReceteameApiInterface receteameApiInterface;
+    private List<RecipeComment> comments;
+    RecyclerView recipeCommentsRecycler;
     ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+        setContentView(R.layout.activity_show_comments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         id_recipe = getIntent().getIntExtra("id_recipe",0);
-        String recipe_name = getIntent().getStringExtra("recipe_name");
-        recipeName = (TextView) findViewById(R.id.recipe_name);
-        recipeName.setText(recipe_name);
-        commentTitle = (EditText) findViewById(R.id.comment_title);
-        commentDescription = (EditText) findViewById(R.id.comment_description);
+        recipen_name = getIntent().getStringExtra("recipe_name");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptCreateComment();
+                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                intent.putExtra("id_recipe", id_recipe);
+                intent.putExtra("recipe_name", recipen_name);
+                startActivity(intent);
             }
         });
+        recipeCommentsRecycler = (RecyclerView) findViewById(R.id.commentRecyclerView);
+        recipeCommentsRecycler.setHasFixedSize(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void attemptCreateComment() {
-
-        commentTitle.setError(null);
-        commentDescription.setError(null);
-
-        String title = commentTitle.getText().toString();
-        String description = commentDescription.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-
-        if (TextUtils.isEmpty(title)) {
-            commentTitle.setError(getString(R.string.error_field_required));
-            focusView = commentTitle;
-            cancel = true;
-        }else if (TextUtils.isEmpty(description)) {
-            commentDescription.setError(getString(R.string.error_field_required));
-            focusView = commentDescription;
-            cancel = true;
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
-        }else{
-            createComment(title,description);
-            pd=ProgressDialog.show(CommentActivity.this,"","Por favor, espera",false);
-        }
+        getRecipeComments();
+        pd= ProgressDialog.show(ShowCommentsActivity.this,"","Por favor, espera",false);
     }
 
     @Override
@@ -91,26 +68,31 @@ public class CommentActivity extends AppCompatActivity {
             case android.R.id.home:
                 super.onBackPressed();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void createComment(String title, String description) {
+    private void getRecipeComments() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         receteameApiInterface = retrofit.create(ReceteameApiInterface.class);
-        Call<Object> call = receteameApiInterface.createComment("Bearer " + UserToken.getUserToken(), id_recipe,title, description);
-        call.enqueue(new Callback<Object>() {
+        Call<List<RecipeComment>> call = receteameApiInterface.getRecipeComments("Bearer " + UserToken.getUserToken(), id_recipe);
+        call.enqueue(new Callback<List<RecipeComment>>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
+            public void onResponse(Call<List<RecipeComment>> call, Response<List<RecipeComment>> response) {
                 pd.dismiss();
-                if (response.code() == 201) {
-                    Intent intent = new Intent(getApplicationContext(), ShowRecipeActivity.class);
-                    intent.putExtra(MainActivity.CLAVE, id_recipe);
-                    startActivity(intent);
+                if (response.code() == 200) {
+                    comments = response.body();
+                    if (comments != null){
+                        recipeCommentsRecycler.setAdapter(new ReciclerRecipeCommentsAdapter(comments));
+                        new ReciclerRecipeCommentsAdapter(comments).notifyDataSetChanged();
+                        recipeCommentsRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
+
+                    }
                 } else if (response.code() == 401) {
                     Toast.makeText(getApplicationContext(),
                             "¡Error! Por favor vuelve a hacer login", Toast.LENGTH_LONG)
@@ -131,7 +113,7 @@ public class CommentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
+            public void onFailure(Call<List<RecipeComment>> call, Throwable t) {
                 Log.e(LOG_TAG, t.toString());
 
             }

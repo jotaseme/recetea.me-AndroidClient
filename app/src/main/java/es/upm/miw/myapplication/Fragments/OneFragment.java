@@ -60,7 +60,6 @@ public class OneFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
-
         MyRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardView);
         MyRecyclerView.setHasFixedSize(true);
         reciclerAdapter = new ReciclerAdapter(recipes);
