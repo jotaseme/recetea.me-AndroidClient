@@ -16,7 +16,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
@@ -80,7 +82,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-
+    private Toolbar toolbar;
     private EditText mRecipeNameView;
     private EditText mRecipeDescriptionView;
     private EditText mRecipeDurationView;
@@ -103,6 +105,9 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
         receteameApiInterface = retrofit.create(ReceteameApiInterface.class);
         setContentView(R.layout.activity_create_recipe);
         getTags();
+        toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mRecipeNameView = (EditText) findViewById(R.id.creation_recipe_name);
         mRecipeDescriptionView = (EditText) findViewById(R.id.creation_recipe_description);
         mRecipeDurationView = (EditText) findViewById(R.id.creation_recipe_duration);
@@ -276,7 +281,16 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
         });
     }
 
-
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() == 1) {
+        } else if (fm.getBackStackEntryCount() > 1) {
+            fm.popBackStack();
+        } else {
+            fm.popBackStack();
+        }
+    }
 
     private void listAllAddView(){
         reList.setText("");

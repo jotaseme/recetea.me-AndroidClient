@@ -2,9 +2,12 @@ package es.upm.miw.myapplication;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -29,12 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.upm.miw.myapplication.Adapters.IngredientsAdapter;
-import es.upm.miw.myapplication.Adapters.StepsAdapter;
+import es.upm.miw.myapplication.Adapters.ReciclerRecipeStepsAdapter;
 import es.upm.miw.myapplication.Models.Recipe;
 import es.upm.miw.myapplication.Models.RecipeIngredient;
 import es.upm.miw.myapplication.Models.RecipeStep;
 import es.upm.miw.myapplication.Models.RecipeTag;
 import es.upm.miw.myapplication.Models.ShoppingList;
+import es.upm.miw.myapplication.Models.UserToken;
 import es.upm.miw.myapplication.Utils.AppendingObjectOutputStream;
 import me.gujun.android.taggroup.TagGroup;
 import retrofit2.Call;
@@ -54,17 +58,20 @@ public class ShowRecipeActivity extends AppCompatActivity {
     public static ReceteameApiInterface receteameApiInterface;
     private TagGroup mTagGroup;
     private ListView ingredientsView;
-    private ListView stepsView;
     private Button button;
+    private Button addCommentButton;
     private IngredientsAdapter adapter;
-    private StepsAdapter steps_adapter;
+    //private StepsAdapter steps_adapter;
     private List<RecipeTag> tags = new ArrayList<>();
     private List<RecipeIngredient> ingredients = new ArrayList<>();
     private List<RecipeStep> steps = new ArrayList<>();
     public static Retrofit retrofit;
+    RecyclerView recipeStepsRecycler;
     ProgressDialog pd;
     private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
     private final static String IMG_URL_BASE = "http://10.0.2.2:8000/uploads/images/";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +79,20 @@ public class ShowRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.recipe_detail);
 
         adapter = new IngredientsAdapter(getApplicationContext(), this.ingredients,null);
-        steps_adapter = new StepsAdapter(getApplicationContext(),this.steps);
         ingredientsView = (ListView)  findViewById(R.id.ingredientsListView);
         ingredientsView.setAdapter(adapter);
-        stepsView = (ListView)  findViewById(R.id.steptsListView);
-        stepsView.setAdapter(steps_adapter);
         toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
         button = (Button) findViewById(R.id.shoppingList);
+        addCommentButton = (Button) findViewById(R.id.addComment);
+        if(UserToken.getUserToken()!=null){
+            addCommentButton.setVisibility(View.VISIBLE);
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recipeStepsRecycler = (RecyclerView) findViewById(R.id.recipeStepsCardView);
+        recipeStepsRecycler.setHasFixedSize(true);
+
 
         ivRecipeImage   = (ImageView) findViewById(R.id.recipe_img);
         tvName   = (TextView)  findViewById(R.id.recipe_name);
@@ -111,6 +123,16 @@ public class ShowRecipeActivity extends AppCompatActivity {
                }
            }
        });
+
+        addCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                intent.putExtra("id_recipe", recipe.getIdRecipe());
+                intent.putExtra("recipe_name", recipe.getName());
+                startActivity(intent);
+            }
+        });
 
     }
     @Override
@@ -151,7 +173,6 @@ public class ShowRecipeActivity extends AppCompatActivity {
                 ingredients = recipe.getRecipeIngredients();
                 steps = recipe.getRecipeSteps();
 
-
                 if (tags != null) {
                     for (RecipeTag tag: tags) {
                         tag_list.add(tag.getTag());
@@ -165,20 +186,18 @@ public class ShowRecipeActivity extends AppCompatActivity {
                 }
 
                 if (steps != null){
-                    for (RecipeStep step: steps) {
-                        steps_adapter.addAll(step);
-                    }
+                    recipeStepsRecycler.setAdapter(new ReciclerRecipeStepsAdapter(steps));
+                    new ReciclerRecipeStepsAdapter(steps).notifyDataSetChanged();
+                    recipeStepsRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
+
                 }
                 adapter.notifyDataSetChanged();
-                steps_adapter.notifyDataSetChanged();
                 mTagGroup.setTags(tag_list);
                 justifyListViewHeightBasedOnChildren(ingredientsView);
-                justifyListViewHeightBasedOnChildren(stepsView);
-
             }
+
             @Override
             public void onFailure(Call<Recipe> call, Throwable t) {
-                //progress.dismiss();
                 Log.e(LOG_TAG, t.toString());
                 Toast.makeText(
                         getApplicationContext(),
@@ -208,15 +227,12 @@ public class ShowRecipeActivity extends AppCompatActivity {
         listView.requestLayout();
     }
 
-
     public void saveRecipeIngredients(ShoppingList shoppingList){
         try
         {
             File file;
-
             file = new File(FICHERO);
             FileOutputStream fos = new FileOutputStream(FICHERO, true);
-
             if (file.length() == 0) {
                 ObjectOutputStream out = new ObjectOutputStream(fos);
                 out.writeObject(shoppingList);
@@ -226,13 +242,9 @@ public class ShowRecipeActivity extends AppCompatActivity {
                 out.writeObject(shoppingList);
                 out.close();
             }
-
         }catch(IOException i)
         {
             i.printStackTrace();
         }
     }
-
-
-
 }

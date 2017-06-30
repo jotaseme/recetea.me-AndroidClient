@@ -37,7 +37,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".RegisterActivity"></activity>
+        <activity
+            android:name=".CommentActivity"
+            android:label="@string/title_activity_comment"
+            android:parentActivityName=".ShowRecipeActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="es.upm.miw.myapplication.ShowRecipeActivity" />
         </activity>
     </application>
 

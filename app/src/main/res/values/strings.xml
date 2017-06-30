@@ -65,4 +65,6 @@
     <string name="profile_message">Bienvenido a tu perfil de usuario</string>
     <string name="crate_recipe">¡Crear receta!</string>
     <string name="my_recipes">Tus recetas</string>
+    <string name="add_comment">Añade tu comentario</string>
+    <string name="title_activity_comment">CommentActivity</string>
 </resources>
