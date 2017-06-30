@@ -33,7 +33,7 @@ public interface ReceteameApiInterface {
 
     @FormUrlEncoded
     @POST("users/auth")
-    Call<Object> loginUser (@Field("login_form[email]") String email,
+        Call<Object> loginUser (@Field("login_form[email]") String email,
                             @Field("login_form[password]") String password);
     @FormUrlEncoded
     @POST("recipes")
@@ -52,4 +52,7 @@ public interface ReceteameApiInterface {
     @GET("recipes")
     Call<Recipes> getRecipesByName(@Query("recipe_filter[name]") String name,
                                    @Query("page") int pageIndex);
+
+    @GET("recipes/user-profile")
+    Call<List<Recipe>> getSelfRecipes(@Header("Authorization") String authorization);
 }

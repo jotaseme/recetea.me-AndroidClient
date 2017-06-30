@@ -1,5 +1,6 @@
 package es.upm.miw.myapplication.Fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -32,7 +33,7 @@ public class FiveFragment extends Fragment{
     private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
     public static Retrofit retrofit;
     List<Recipe> randomRecipesList = new ArrayList<>();
-
+    ProgressDialog pd;
     public FiveFragment() {
         // Required empty public constructor
     }
@@ -52,7 +53,10 @@ public class FiveFragment extends Fragment{
         MyRecyclerView.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        pd=ProgressDialog.show(getActivity(),"","Por favor, espera",false);
         getRecipeRandomly();
+
+
         if (listitems.size() > 0 & MyRecyclerView != null) {
             MyRecyclerView.setAdapter(new ReciclerAdapter(randomRecipesList));
         }
@@ -63,6 +67,7 @@ public class FiveFragment extends Fragment{
         floatingActionButtonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 RecipeSimplify recipeSimplify =
                         new RecipeSimplify(randomRecipesList.get(0).getIdRecipe(), randomRecipesList.get(0).getName(),randomRecipesList.get(0).getImage());
                 recipeSimplify.saveRecipe();
@@ -72,7 +77,9 @@ public class FiveFragment extends Fragment{
         floatingActionButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd=ProgressDialog.show(getActivity(),"","Por favor, espera",false);
                 getRecipeRandomly();
+
 
             }
         });
@@ -90,6 +97,7 @@ public class FiveFragment extends Fragment{
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                pd.dismiss();
                 randomRecipesList = response.body();
                 MyRecyclerView.setAdapter(new ReciclerAdapter(randomRecipesList));
 

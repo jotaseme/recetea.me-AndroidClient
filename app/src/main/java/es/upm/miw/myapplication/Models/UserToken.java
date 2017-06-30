@@ -97,7 +97,7 @@ public class  UserToken implements Serializable {
         try {
             String[] split = JWTEncoded.split("\\.");
             int index = getJson(split[1]).indexOf("username") + 11;
-            int lastIndex = getJson(split[1]).indexOf(",") -14;
+            int lastIndex = getJson(split[1]).indexOf(",") -11;
             return getJson(split[1]).substring(index, index+lastIndex);
         } catch (UnsupportedEncodingException e) {
             return null;

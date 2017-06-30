@@ -88,7 +88,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
 
         int id_recipe = getIntent().getIntExtra(MainActivity.CLAVE,0);
         recipeDetail(id_recipe);
-        pd=ProgressDialog.show(ShowRecipeActivity.this,"","Please Wait",false);
+        pd=ProgressDialog.show(ShowRecipeActivity.this,"","Por favor, espera",false);
         mTagGroup = (TagGroup) findViewById(R.id.tag_group);
 
         button.setOnClickListener(new View.OnClickListener() {

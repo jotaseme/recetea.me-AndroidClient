@@ -63,4 +63,6 @@
     <string name="search_hint">Busca tus recetas</string>
     <string name="favRecipesListDeletion">¡Lista borrada correctamente!</string>
     <string name="profile_message">Bienvenido a tu perfil de usuario</string>
+    <string name="crate_recipe">¡Crear receta!</string>
+    <string name="my_recipes">Tus recetas</string>
 </resources>

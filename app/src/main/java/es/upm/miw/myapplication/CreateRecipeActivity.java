@@ -51,15 +51,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class CreateRecipeActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
     public static final String LOG_TAG = "TFM2017";
     //private final static String URL_BASE = "http://receteame.cecofersa.com/";
-    private static final String USER_TOKEN= "data/data/es.upm.miw.myapplication/files/token.txt";
     private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     private int PICK_IMAGE_REQUEST = 1;
 
@@ -606,19 +600,29 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                //progress.dismiss();
-                Log.i(LOG_TAG, response + " RETURN");
-                Log.i(LOG_TAG, response.code() + " CODE");
-                Log.i(LOG_TAG, response.body()+" BODY");
-
-
-                if(response.code()==200){
+                Log.e(LOG_TAG, "response " + response+"");
+                Log.e(LOG_TAG, "code " + response.code()+"");
+                Log.e(LOG_TAG, "body " + response.body()+"");
+                Log.e(LOG_TAG, "message " + response.message()+"");
+                if(response.code()==201){
                     Toast.makeText(getApplicationContext(),
-                            "OK", Toast.LENGTH_LONG)
+                            "¡Receta creada correctamente!", Toast.LENGTH_LONG)
+                            .show();
+                }else if(response.code()==401){
+                    Toast.makeText(getApplicationContext(),
+                            "¡Error! Por favor vuelve a hacer login", Toast.LENGTH_LONG)
+                            .show();
+                    UserToken.destroyToken();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                }else if(response.code()==400){
+                    Toast.makeText(getApplicationContext(),
+                            "¡Error! Por favor vuelve a rellenar el formulario", Toast.LENGTH_LONG)
                             .show();
                 }else{
                     Toast.makeText(getApplicationContext(),
-                            "¡Error! Por favor revisa tus credenciales", Toast.LENGTH_LONG)
+                            "¡Error! ¿Que haces aquí?", Toast.LENGTH_LONG)
                             .show();
                 }
             }
@@ -629,6 +633,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
             }
         });
     }
+
+
 
     private void getTags(){
         Call<List<RecipeTag>> call = receteameApiInterface.getTags();
@@ -658,7 +664,5 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
             }
         });
     }
-
-
 }
 
