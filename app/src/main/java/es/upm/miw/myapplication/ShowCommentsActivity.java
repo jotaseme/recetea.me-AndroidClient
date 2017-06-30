@@ -45,16 +45,20 @@ public class ShowCommentsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         id_recipe = getIntent().getIntExtra("id_recipe",0);
         recipen_name = getIntent().getStringExtra("recipe_name");
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-                intent.putExtra("id_recipe", id_recipe);
-                intent.putExtra("recipe_name", recipen_name);
-                startActivity(intent);
-            }
-        });
+        if(UserToken.getUserToken()!=null){
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                    intent.putExtra("id_recipe", id_recipe);
+                    intent.putExtra("recipe_name", recipen_name);
+                    startActivity(intent);
+                }
+            });
+        }
+
         recipeCommentsRecycler = (RecyclerView) findViewById(R.id.commentRecyclerView);
         recipeCommentsRecycler.setHasFixedSize(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,7 +84,7 @@ public class ShowCommentsActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         receteameApiInterface = retrofit.create(ReceteameApiInterface.class);
-        Call<List<RecipeComment>> call = receteameApiInterface.getRecipeComments("Bearer " + UserToken.getUserToken(), id_recipe);
+        Call<List<RecipeComment>> call = receteameApiInterface.getRecipeComments(id_recipe);
         call.enqueue(new Callback<List<RecipeComment>>() {
             @Override
             public void onResponse(Call<List<RecipeComment>> call, Response<List<RecipeComment>> response) {

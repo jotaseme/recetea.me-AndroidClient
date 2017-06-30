@@ -72,7 +72,17 @@ public class ShowRecipeActivity extends AppCompatActivity {
     private final static String URL_BASE = "http://10.0.2.2:8000/api/v1/";
     private final static String IMG_URL_BASE = "http://10.0.2.2:8000/uploads/images/";
 
+    private TagGroup.OnTagClickListener mTagClickListener = new TagGroup.OnTagClickListener() {
+        @Override
+        public void onTagClick(String tag) {
 
+            Intent intent = new Intent(getApplicationContext(), AdvancedTagSearchActivity.class);
+            intent.putExtra("id_recipe", recipe.getIdRecipe());
+            intent.putExtra("tag", tag);
+            startActivity(intent);
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +114,8 @@ public class ShowRecipeActivity extends AppCompatActivity {
         recipeDetail(id_recipe);
         pd=ProgressDialog.show(ShowRecipeActivity.this,"","Por favor, espera",false);
         mTagGroup = (TagGroup) findViewById(R.id.tag_group);
+
+        mTagGroup.setOnTagClickListener(mTagClickListener);
 
         button.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -258,4 +270,6 @@ public class ShowRecipeActivity extends AppCompatActivity {
             i.printStackTrace();
         }
     }
+
+
 }

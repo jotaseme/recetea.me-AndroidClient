@@ -56,6 +56,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.upm.miw.myapplication.ShowRecipeActivity" />
         </activity>
+        <activity
+            android:name=".AdvancedTagSearchActivity"
+            android:label="@string/title_activity_advanced_tag_search"
+            android:parentActivityName=".ShowRecipeActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="es.upm.miw.myapplication.ShowRecipeActivity" />
+        </activity>
     </application>
 
 </manifest>

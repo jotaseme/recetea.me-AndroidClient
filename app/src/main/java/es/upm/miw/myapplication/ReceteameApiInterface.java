@@ -20,6 +20,10 @@ public interface ReceteameApiInterface {
     @GET("recipes")
     Call<Recipes> getRecipes(@Query("page") int pageIndex);
 
+    @GET("recipes")
+    Call<Recipes> getRecipesByTag(@Query("page") int pageIndex,
+                                  @Query("recipe_filter[recipe_tags][0][tag]") String tag);
+
     @GET("recipes/{id_recipe}")
     Call<Recipe> getRecipe(@Path("id_recipe") int id_recipe);
 
@@ -65,6 +69,5 @@ public interface ReceteameApiInterface {
                                @Field("form_comment[description]") String description);
 
     @GET("recipes/{id_recipe}/comments")
-    Call<List<RecipeComment>> getRecipeComments(@Header("Authorization") String authorization,
-                                                      @Path("id_recipe") int id_recipe);
+    Call<List<RecipeComment>> getRecipeComments(@Path("id_recipe") int id_recipe);
 }

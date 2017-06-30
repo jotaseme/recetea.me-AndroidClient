@@ -70,4 +70,5 @@
     <string name="comment_title">Título del comentario</string>
     <string name="comment">Comenta lo que quieras</string>
     <string name="title_activity_show_comments">Comentarios</string>
+    <string name="title_activity_advanced_tag_search">Busqueda avanzada por etiqueta</string>
 </resources>

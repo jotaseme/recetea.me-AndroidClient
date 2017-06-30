@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.upm.miw.myapplication.Models.Recipe;
+import es.upm.miw.myapplication.Models.RecipeTag;
 import es.upm.miw.myapplication.MyViewHolder;
 import es.upm.miw.myapplication.R;
 
@@ -42,9 +44,16 @@ public class ReciclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 .load(url)
                 .placeholder(R.drawable.logo_upm_miw)
                 .into(holder.coverImageView);
-        holder.portionsTextView.setText(list.get(position).getPortions());
-        holder.durationTextView.setText(list.get(position).getDuration());
+
         holder.coverImageView.setTag(list.get(position).getImage());
+        ArrayList<String> tag_list = new ArrayList<>();
+
+        if (list.get(position).getRecipeTags() != null) {
+            for (RecipeTag tag: list.get(position).getRecipeTags()) {
+                tag_list.add(tag.getTag());
+            }
+        }
+        holder.mTagGroup.setTags(tag_list);
     }
 
     @Override
