@@ -66,5 +66,7 @@
     <string name="crate_recipe">¡Crear receta!</string>
     <string name="my_recipes">Tus recetas</string>
     <string name="add_comment">Añade tu comentario</string>
-    <string name="title_activity_comment">CommentActivity</string>
+    <string name="title_activity_comment">Añade tu opinión</string>
+    <string name="comment_title">Título del comentario</string>
+    <string name="comment">Comenta lo que quieras</string>
 </resources>

@@ -55,4 +55,11 @@ public interface ReceteameApiInterface {
 
     @GET("recipes/user-profile")
     Call<List<Recipe>> getSelfRecipes(@Header("Authorization") String authorization);
+
+    @FormUrlEncoded
+    @POST("recipes/{id_recipe}/comments")
+    Call<Object> createComment (@Header("Authorization") String authorization,
+                               @Path("id_recipe") int id_recipe,
+                               @Field("form_comment[title]") String title,
+                               @Field("form_comment[description]") String description);
 }

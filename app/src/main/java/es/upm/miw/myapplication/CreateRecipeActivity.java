@@ -614,10 +614,6 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.e(LOG_TAG, "response " + response+"");
-                Log.e(LOG_TAG, "code " + response.code()+"");
-                Log.e(LOG_TAG, "body " + response.body()+"");
-                Log.e(LOG_TAG, "message " + response.message()+"");
                 if(response.code()==201){
                     Toast.makeText(getApplicationContext(),
                             "¡Receta creada correctamente!", Toast.LENGTH_LONG)
