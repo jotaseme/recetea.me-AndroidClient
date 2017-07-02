@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -24,6 +23,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -281,16 +281,18 @@ public class CreateRecipeActivity extends AppCompatActivity implements LoaderCal
         });
     }
 
-    public void onBackPressed() {
-        super.onBackPressed();
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() == 1) {
-        } else if (fm.getBackStackEntryCount() > 1) {
-            fm.popBackStack();
-        } else {
-            fm.popBackStack();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
+
 
     private void listAllAddView(){
         reList.setText("");
